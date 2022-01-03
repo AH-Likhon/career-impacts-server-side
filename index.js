@@ -42,14 +42,39 @@ async function run() {
         });
 
 
-        // // insert starting record time api
-        // app.post('/recordTime', async (req, res) => {
-        //     const time = req.body;
-        //     const result = await recordTime.insertOne(time);
-        //     console.log(result);
+        // insert job api
+        app.post('/jobs', async (req, res) => {
+            const job = req.body;
+            const result = await jobs.insertOne(job);
+            console.log(result);
 
-        //     res.json(result);
-        // });
+            res.json(result);
+        });
+
+        // find a single job api
+        app.get('/jobs/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await jobs.findOne(query);
+            // console.log('Find with id', id);
+            res.send(result);
+        });
+
+        // update single job
+        app.put('/jobs/:id', async (req, res) => {
+            const id = req.params.id;
+            const updateData = req.body;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: updateData
+            };
+            const result = await jobs.updateOne(filter, updateDoc, options);
+
+            console.log(result);
+            // console.log(req.body);
+            res.json(result);
+        })
 
 
         // // get my myAttendance api
@@ -62,40 +87,6 @@ async function run() {
         //     res.send(result);
         // });
 
-        // // find a single order api
-        // app.get('/editAttendance/:id', async (req, res) => {
-        //     const id = req.params.id;
-        //     const query = { _id: ObjectId(id) };
-        //     const result = await recordTime.findOne(query);
-        //     // console.log('Find with id', id);
-        //     res.send(result);
-        // });
-
-        // // update my attendance
-        // app.put('/editAttendance/:id', async (req, res) => {
-        //     const id = req.params.id;
-        //     const updateData = req.body;
-        //     const filter = { _id: ObjectId(id) };
-        //     const options = { upsert: true };
-        //     const updateDoc = {
-        //         $set: {
-        //             startHour: updateData.startHour,
-        //             startMin: updateData.startMin,
-        //             startBreakHour: updateData.startBreakHour,
-        //             startBreakMin: updateData.startBreakMin,
-        //             endBreakHour: updateData.endBreakHour,
-        //             endBreakMin: updateData.endBreakMin,
-        //             endHour: updateData.endHour,
-        //             endMin: updateData.endMin,
-        //             memo: updateData.memo
-        //         },
-        //     };
-        //     const result = await recordTime.updateOne(filter, updateDoc, options);
-
-        //     console.log(result);
-        //     // console.log(req.body);
-        //     res.json(result);
-        // })
 
 
         // // get admin user
