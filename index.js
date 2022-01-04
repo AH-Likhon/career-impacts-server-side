@@ -106,6 +106,15 @@ async function run() {
             res.json(result);
         });
 
+        // Delete/remove appliedJobs jobs 
+        app.delete("/appliedJobs/:id", async (req, res) => {
+            console.log(req.params.id);
+            const result = await appliedJobs.deleteOne({
+                _id: ObjectId(req.params.id),
+            });
+            res.send(result);
+        });
+
         // insert a user
         app.post('/users', async (req, res) => {
             const user = req.body;
