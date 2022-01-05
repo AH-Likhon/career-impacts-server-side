@@ -13,6 +13,7 @@ app.use(cors());
 app.use(express.json());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.q3g5t.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+console.log(uri);
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 
@@ -24,6 +25,7 @@ async function run() {
         const jobs = database.collection('jobs');
         const appliedJobs = database.collection('Applied');
         const usersCollection = database.collection('Users');
+        const companyCollection = database.collection('Company');
 
 
         // get jobs api
@@ -98,13 +100,14 @@ async function run() {
         });
 
         // insert appliedJobs job api
-        app.post('/appliedJobs', async (req, res) => {
+        app.post('/appliedJobs/:id', async (req, res) => {
             const job = req.body;
             const result = await appliedJobs.insertOne(job);
             console.log(result);
 
             res.json(result);
         });
+
 
         // Delete/remove appliedJobs jobs 
         app.delete("/appliedJobs/:id", async (req, res) => {
@@ -141,6 +144,30 @@ async function run() {
             const cursor = appliedJobs.find(query);
             const result = await cursor.toArray();
             console.log(result);
+            res.send(result);
+        })
+
+        ///register Company
+
+        app.post('/registerCompany', async (req, res) => {
+            const company = req.body;
+            const result = await companyCollection.insertOne(company);
+            console.log(result);
+
+            res.json(result);
+        });
+
+        ///get Company
+        app.get("/company", async (req, res) => {
+            const result = await companyCollection.find({}).toArray();
+            console.log(req.body);
+            res.send(result);
+        });
+
+        ///get apply resume
+        app.get("/resume", async (req, res) => {
+            const result = await appliedJobs.find({}).toArray();
+            console.log(req.body);
             res.send(result);
         });
 
