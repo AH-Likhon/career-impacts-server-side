@@ -164,7 +164,7 @@ async function run() {
             res.send(result);
         });
 
-        // get apply resume
+        ///get apply resume
         app.get("/resume", async (req, res) => {
             const result = await appliedJobs.find({}).toArray();
             console.log(req.body);
